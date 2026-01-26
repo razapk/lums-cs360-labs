@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Let's print all of them
         for (Mood mood : moods) {
-            Log.e("MOOD", mood.getMoodType() + " at " + mood.getDate().toString());
+            Log.d("MOOD", mood.getMoodType() + " at " + mood.getDate().toString());
         }
 
         // Lab activity
@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         tweets.add(new NormalTweet("This is a normal tweet."));
 
         for (Tweet tweet : tweets) {
-            Log.e("TWEET", tweet.getMessage() + " | Important: " + tweet.isImportant());
+            Log.d("TWEET", tweet.getMessage() + " | Important: " + tweet.isImportant());
         }
     }
 }
