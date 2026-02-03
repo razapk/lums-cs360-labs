@@ -2,6 +2,10 @@ package edu.lums.lonelytwitter;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ListView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,8 +16,18 @@ import androidx.core.view.WindowInsetsCompat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import edu.lums.lonelytwitter.R;
 
 public class MainActivity extends AppCompatActivity {
+    protected Button addButton;
+    protected Button removeButton;
+    protected Button confirmButton;
+    protected EditText editText;
+    protected ListView listView;
+    protected View addView;
+
+    protected List<String> data;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,30 +38,39 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        playStuff();
+
+        // Initialize UI components
+        addButton = findViewById(R.id.add_city_button);
+        removeButton = findViewById(R.id.remove_city_button);
+        confirmButton = findViewById(R.id.confirm_button);
+        editText = findViewById(R.id.edit_text);
+        listView = findViewById(R.id.list);
+        addView = findViewById(R.id.add_layout);
+        data = new ArrayList<>();
+
+        // Set click listeners
+        addButton.setOnClickListener(v -> addButtonClicked());
+        removeButton.setOnClickListener(v -> removeButtonClicked());
+        confirmButton.setOnClickListener(v -> confirmButtonClicked());
     }
 
-    protected void playStuff() {
-        // Lab exercise
-        List<Mood> moods = new ArrayList<>();
-        moods.add(new HappyMood());
-        moods.add(new SadMood());
+    protected void addButtonClicked() {
+        addView.setVisibility(View.VISIBLE);
+    }
 
-        // Let's modify a mood to hundred years after epoch
-        moods.get(0).setDate(new Date(100L * 365L * 24L * 60L * 60L * 1000L));
+    protected void removeButtonClicked() {
+        // Implement removal logic here
+        Log.i("MainActivity", "Remove button clicked");
+    }
 
-        // Let's print all of them
-        for (Mood mood : moods) {
-            Log.d("MOOD", mood.getMoodType() + " at " + mood.getDate().toString());
+    protected void confirmButtonClicked() {
+        String cityName = editText.getText().toString();
+        if (!cityName.isEmpty()) {
+            data.add(cityName);
+            // Update ListView adapter here
+            Log.i("MainActivity", "Added city: " + cityName);
         }
-
-        // Lab activity
-        List<Tweet> tweets = new ArrayList<>();
-        tweets.add(new ImportantTweet("This is an important tweet!"));
-        tweets.add(new NormalTweet("This is a normal tweet."));
-
-        for (Tweet tweet : tweets) {
-            Log.d("TWEET", tweet.getMessage() + " | Important: " + tweet.isImportant());
-        }
+        addView.setVisibility(View.GONE);
+        editText.setText("");
     }
 }
