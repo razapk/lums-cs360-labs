@@ -14,9 +14,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import edu.lums.lonelytwitter.R;
 
 public class MainActivity extends AppCompatActivity {
     protected Button addButton;
@@ -27,6 +25,8 @@ public class MainActivity extends AppCompatActivity {
     protected View addView;
 
     protected List<String> data;
+    protected CityListAdapter cityListAdapter;
+    protected int selectedPosition = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,10 +48,21 @@ public class MainActivity extends AppCompatActivity {
         addView = findViewById(R.id.add_layout);
         data = new ArrayList<>();
 
+        // Initialize adapter and set it to ListView
+        cityListAdapter = new CityListAdapter(this, data);
+        listView.setAdapter(cityListAdapter);
+
         // Set click listeners
         addButton.setOnClickListener(v -> addButtonClicked());
         removeButton.setOnClickListener(v -> removeButtonClicked());
         confirmButton.setOnClickListener(v -> confirmButtonClicked());
+
+        // Set item click listener for selection
+        listView.setOnItemClickListener((parent, view, position, id) -> {
+            selectedPosition = position;
+            removeButton.setEnabled(true);
+            Log.i("MainActivity", "Selected city at position: " + position);
+        });
     }
 
     protected void addButtonClicked() {
@@ -59,15 +70,21 @@ public class MainActivity extends AppCompatActivity {
     }
 
     protected void removeButtonClicked() {
-        // Implement removal logic here
-        Log.i("MainActivity", "Remove button clicked");
+        if (selectedPosition >= 0 && selectedPosition < data.size()) {
+            String removedCity = data.get(selectedPosition);
+            cityListAdapter.removeCity(selectedPosition);
+            Log.i("MainActivity", "Removed city: " + removedCity);
+            selectedPosition = -1;
+            removeButton.setEnabled(false);
+        } else {
+            Log.i("MainActivity", "No city selected to remove");
+        }
     }
 
     protected void confirmButtonClicked() {
-        String cityName = editText.getText().toString();
+        String cityName = editText.getText().toString().trim();
         if (!cityName.isEmpty()) {
-            data.add(cityName);
-            // Update ListView adapter here
+            cityListAdapter.addCity(cityName);
             Log.i("MainActivity", "Added city: " + cityName);
         }
         addView.setVisibility(View.GONE);
