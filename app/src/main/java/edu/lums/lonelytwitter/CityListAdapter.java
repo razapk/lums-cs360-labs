@@ -12,11 +12,11 @@ import androidx.annotation.Nullable;
 
 import java.util.List;
 
-public class CityListAdapter extends ArrayAdapter<String> {
+public class CityListAdapter extends ArrayAdapter<City> {
     private final Context context;
-    private final List<String> cityList;
+    private final List<City> cityList;
 
-    public CityListAdapter(@NonNull Context context, @NonNull List<String> cityList) {
+    public CityListAdapter(@NonNull Context context, @NonNull List<City> cityList) {
         super(context, R.layout.list_item_city, cityList);
         this.context = context;
         this.cityList = cityList;
@@ -25,21 +25,17 @@ public class CityListAdapter extends ArrayAdapter<String> {
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        ViewHolder viewHolder;
-
         if (convertView == null) {
             LayoutInflater inflater = LayoutInflater.from(context);
             convertView = inflater.inflate(R.layout.list_item_city, parent, false);
-
-            viewHolder = new ViewHolder();
-            viewHolder.cityNameTextView = convertView.findViewById(R.id.city_name_text);
-            convertView.setTag(viewHolder);
         } else {
-            viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        String cityName = cityList.get(position);
-        viewHolder.cityNameTextView.setText(cityName);
+        TextView titleTextView = convertView.findViewById(R.id.city_name_text);
+        TextView provinceTextView = convertView.findViewById(R.id.city_province_text);
+        City city = cityList.get(position);
+        titleTextView.setText(city.getName());
+        provinceTextView.setText(city.getProvince());
 
         return convertView;
     }
@@ -51,13 +47,20 @@ public class CityListAdapter extends ArrayAdapter<String> {
 
     @Nullable
     @Override
-    public String getItem(int position) {
+    public City getItem(int position) {
         return cityList.get(position);
     }
 
-    public void addCity(String cityName) {
-        cityList.add(cityName);
+    public void addCity(City city) {
+        cityList.add(city);
         notifyDataSetChanged();
+    }
+
+    public void updateCity(int position, City city) {
+        if (position >= 0 && position < cityList.size()) {
+            cityList.set(position, city);
+            notifyDataSetChanged();
+        }
     }
 
     public void removeCity(int position) {
@@ -65,9 +68,5 @@ public class CityListAdapter extends ArrayAdapter<String> {
             cityList.remove(position);
             notifyDataSetChanged();
         }
-    }
-
-    private static class ViewHolder {
-        TextView cityNameTextView;
     }
 }
