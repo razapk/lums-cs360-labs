@@ -1,4 +1,4 @@
-package edu.lums.lonelytwitter;
+package com.example.androiduitesting;
 
 import org.junit.Test;
 
