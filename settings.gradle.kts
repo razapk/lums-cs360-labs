@@ -19,5 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "LonelyTwitter"
-include ':app'
+rootProject.name = "Lab08"
+include(":app")
+ 
